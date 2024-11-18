@@ -2,6 +2,7 @@ import Checkbox from '@/Components/Checkbox';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
+import SocialLoginButton from '@/Components/SocialLoginButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
@@ -93,6 +94,11 @@ export default function Login({ status, canResetPassword }) {
                     <PrimaryButton className="ms-4" disabled={processing}>
                         Log in
                     </PrimaryButton>
+                </div>
+
+                <div className="mt-4 flex flex-col gap-1">
+                    <SocialLoginButton provider="github"></SocialLoginButton>
+                    <SocialLoginButton provider="discord"></SocialLoginButton>
                 </div>
             </form>
         </GuestLayout>

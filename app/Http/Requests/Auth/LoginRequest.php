@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use App\Models\User;
+
 
 class LoginRequest extends FormRequest
 {
@@ -44,9 +46,20 @@ class LoginRequest extends FormRequest
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
+
+            $user = User::where('email', $this->email)->first();
+
+            if ($user) {
+                $user->increment('wrong_pass_count');
+            }
+
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                'email' => $user->wrong_pass_count >= 5 ? trans('auth.blocked') : trans('auth.failed'),
             ]);
+
+
+
+
         }
 
         RateLimiter::clear($this->throttleKey());
