@@ -40,6 +40,17 @@ class ProfileController extends Controller
         return Redirect::route('profile.edit');
     }
 
+
+    public function updateTheme(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'theme' => ['required', 'in:light,dark'],
+        ]);
+
+        $request->user()->update($request->only('theme'));
+
+        return Redirect::back();
+    }
     /**
      * Delete the user's account.
      */
@@ -59,5 +70,35 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+
+    public function destroyPic(Request $request)
+    {
+
+        $user = $request->user();
+
+        $user->profile_pic_b64 = null;
+        $user->save();
+        return Redirect::back();
+
+    }
+
+
+    public function upload(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'profile_pic' => ['required', 'image', 'max:1024'],
+        ]);
+
+        $user = $request->user();
+
+        $image = $request->file('profile_pic');
+        $imageData = base64_encode(file_get_contents($image->getRealPath()));
+
+        $user->profile_pic_b64 = $imageData;
+        $user->save();
+
+        return Redirect::back();
     }
 }

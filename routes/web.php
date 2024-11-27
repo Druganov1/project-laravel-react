@@ -48,9 +48,14 @@ Route::get('/help', function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::patch('/theme', action: [ProfileController::class, 'updateTheme'])->name('profile.updateTheme');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile', action: [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::delete('/profilepicture', [ProfileController::class, 'destroyPic'])->name('profile.deletepic');
+    Route::post('/profilepicture', [ProfileController::class, 'upload'])->name('profile.uploadpic');
+
 });
+
 
 require __DIR__.'/auth.php';
