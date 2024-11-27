@@ -16,6 +16,8 @@ export default function UpdateTheme({ className = '' }) {
     const submit = (e) => {
         e.preventDefault();
 
+        console.log(e);
+
         patch(route('profile.updateTheme'));
     };
     return (

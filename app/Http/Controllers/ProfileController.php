@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class ProfileController extends Controller
 {
@@ -85,6 +87,7 @@ class ProfileController extends Controller
     }
 
 
+
     public function upload(Request $request): RedirectResponse
     {
         $request->validate([
@@ -93,9 +96,24 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
-        $image = $request->file('profile_pic');
-        $imageData = base64_encode(file_get_contents($image->getRealPath()));
+        $imageFile = $request->file('profile_pic');
 
+        // Initialize the ImageManager with the GD driver
+        $manager = new ImageManager(new Driver());
+
+        // Read the uploaded image
+        $image = $manager->read($imageFile->getRealPath());
+
+        // Resize the image proportionally to 300px width
+        $image->scale(width: 300);
+
+        // Convert to JPEG and set quality to 75%
+        $compressedImage = $image->toJpeg(quality: 75);
+
+        // Encode as Base64
+        $imageData = base64_encode($compressedImage);
+
+        // Save Base64 in the database
         $user->profile_pic_b64 = $imageData;
         $user->save();
 

@@ -1,7 +1,9 @@
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
+import SubTitle from '@/Components/SubTitle';
 import TextInput from '@/Components/TextInput';
+import Title from '@/Components/Title';
 import { Transition } from '@headlessui/react';
 import { useForm } from '@inertiajs/react';
 import { useRef } from 'react';
@@ -47,14 +49,12 @@ export default function UpdatePasswordForm({ className = '' }) {
     return (
         <section className={className}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900">
-                    Update Password
-                </h2>
+                <Title>Update Password</Title>
 
-                <p className="mt-1 text-sm text-gray-600">
+                <SubTitle>
                     Ensure your account is using a long, random password to stay
                     secure.
-                </p>
+                </SubTitle>
             </header>
 
             <form onSubmit={updatePassword} className="mt-6 space-y-6">
@@ -131,9 +131,7 @@ export default function UpdatePasswordForm({ className = '' }) {
                         leave="transition ease-in-out"
                         leaveTo="opacity-0"
                     >
-                        <p className="text-sm text-gray-600">
-                            Saved.
-                        </p>
+                        <p className="text-sm text-gray-600">Saved.</p>
                     </Transition>
                 </div>
             </form>
