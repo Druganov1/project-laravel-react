@@ -12,7 +12,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
-
+use Illuminate\Http\JsonResponse;
 class ProfileController extends Controller
 {
     /**
@@ -75,7 +75,7 @@ class ProfileController extends Controller
     }
 
 
-    public function destroyPic(Request $request)
+    public function removeProfilePic(Request $request)
     {
 
         $user = $request->user();
@@ -88,7 +88,7 @@ class ProfileController extends Controller
 
 
 
-    public function upload(Request $request): RedirectResponse
+    public function upload(Request $request): JsonResponse
     {
         $request->validate([
             'profile_pic' => ['required', 'image', 'max:1024'],
@@ -117,6 +117,9 @@ class ProfileController extends Controller
         $user->profile_pic_b64 = $imageData;
         $user->save();
 
-        return Redirect::back();
+        return response()->json([
+            'message' => 'Profile picture uploaded successfully.',
+            'profile_pic_b64' => $imageData, // Include the encoded image data
+        ]);
     }
 }

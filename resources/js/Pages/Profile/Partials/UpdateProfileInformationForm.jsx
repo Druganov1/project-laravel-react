@@ -20,6 +20,7 @@ export default function UpdateProfileInformation({
 }) {
     const user = usePage().props.auth.user;
     const [modalState, setModalState] = useState(false);
+    const [profilePic, setProfilePic] = useState(user.profile_pic_b64);
 
     const { data, setData, patch, errors, processing, recentlySuccessful } =
         useForm({
@@ -47,6 +48,7 @@ export default function UpdateProfileInformation({
             axios
                 .post(route('profile.uploadpic'), formData)
                 .then((response) => {
+                    setProfilePic(response.data.profile_pic_b64);
                     console.log('Profile picture uploaded successfully');
                 })
                 .catch((error) => {
@@ -78,9 +80,10 @@ export default function UpdateProfileInformation({
 
     function deleteProfilePic() {
         axios
-            .delete(route('profile.deletepic'))
+            .post(route('profile.deletepic'))
             .then(() => {
                 closeModal();
+                setProfilePic(null);
             })
             .catch((error) => {
                 console.error(
@@ -105,8 +108,8 @@ export default function UpdateProfileInformation({
                     <img
                         id="profile-picture"
                         src={
-                            user.profile_pic_b64
-                                ? `data:image/png;base64,${user.profile_pic_b64}`
+                            profilePic
+                                ? `data:image/png;base64,${profilePic}`
                                 : '/assets/img/defaultuser.webp'
                         }
                         alt="Profile Picture"
@@ -148,12 +151,12 @@ export default function UpdateProfileInformation({
                                     Upload a photo
                                 </div>
 
-                                <div
+                                <button
                                     className="block w-full cursor-pointer px-4 py-2 text-start text-sm leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:text-white dark:hover:bg-gray-500"
                                     onClick={confirmProfilePicDeletion}
                                 >
                                     Remove photo
-                                </div>
+                                </button>
                             </Dropdown.Content>
                         </Dropdown>
                     </div>
