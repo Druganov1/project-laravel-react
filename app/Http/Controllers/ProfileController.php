@@ -90,10 +90,16 @@ class ProfileController extends Controller
 
     public function upload(Request $request): JsonResponse
     {
-        $request->validate([
-            'profile_pic' => ['required', 'image', 'max:1024'],
-        ]);
-
+        $request->validate(
+            [
+                'profile_pic' => ['required', 'image', 'mimes:jpg,png', 'max:2048'],
+            ],
+            [
+                'profile_pic.image' => 'Het bestand moet een afbeelding zijn.',
+                'profile_pic.mimes' => 'Alleen de volgende bestandsvormen zijn toegestaan: JPG & PNG.',
+                'profile_pic.max' => 'Het bestand mag niet groter zijn dan 2MB.',
+            ]
+        );
         $user = $request->user();
 
         $imageFile = $request->file('profile_pic');

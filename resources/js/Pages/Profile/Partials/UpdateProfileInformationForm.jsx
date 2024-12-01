@@ -21,6 +21,7 @@ export default function UpdateProfileInformation({
     const user = usePage().props.auth.user;
     const [modalState, setModalState] = useState(false);
     const [profilePic, setProfilePic] = useState(user.profile_pic_b64);
+    const [profilePicError, setProfilePicError] = useState([]);
 
     const { data, setData, patch, errors, processing, recentlySuccessful } =
         useForm({
@@ -37,6 +38,7 @@ export default function UpdateProfileInformation({
     function handleFileChange(event) {
         const input = event.target;
         if (input && input.files?.length > 0) {
+            setProfilePicError(null);
             const file = input.files[0]; // Get the selected file
             console.log('File selected:', file);
 
@@ -52,10 +54,7 @@ export default function UpdateProfileInformation({
                     console.log('Profile picture uploaded successfully');
                 })
                 .catch((error) => {
-                    console.error(
-                        'Failed to upload profile picture',
-                        error.response?.data || error,
-                    );
+                    setProfilePicError(error.response.data.errors.profile_pic);
                 });
         } else {
             console.log('No file selected');
@@ -161,12 +160,19 @@ export default function UpdateProfileInformation({
                         </Dropdown>
                     </div>
                 </div>
+                {profilePicError && (
+                    <div className="mt-2">
+                        {profilePicError.map((error, index) => (
+                            <InputError key={index} message={error} />
+                        ))}
+                    </div>
+                )}
             </div>
 
             <input
                 id="file-upload"
                 type="file"
-                accept="image/*"
+                accept="image/png, image/jpeg"
                 className="hidden"
                 onChange={handleFileChange}
             />
@@ -219,11 +225,17 @@ export default function UpdateProfileInformation({
                     <TextInput
                         id="email"
                         type="email"
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full disabled:bg-slate-200"
                         value={data.email}
                         onChange={(e) => setData('email', e.target.value)}
-                        required
+                        disabled={user.provider ? true : false}
+                        required={user.provider ? false : true}
                         autoComplete="username"
+                        title={
+                            user.provider
+                                ? `Your account is linked to ${user.provider}, so you cannot change your email through our app.`
+                                : ''
+                        }
                     />
 
                     <InputError className="mt-2" message={errors.email} />

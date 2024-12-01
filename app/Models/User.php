@@ -28,6 +28,8 @@ class User extends Authenticatable
         'wrong_pass_count',
         'theme',
         'profile_pic_b64',
+        'last_logged_in_ip',
+        'last_changed_password',
     ];
 
     /**
