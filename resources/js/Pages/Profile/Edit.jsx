@@ -1,6 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, usePage } from '@inertiajs/react';
 import DeleteUserForm from './Partials/DeleteUserForm';
+import ExtraInfo from './Partials/ExtraInfo';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm';
 import UpdateTheme from './Partials/UpdateTheme';
@@ -39,6 +40,10 @@ export default function Edit({ mustVerifyEmail, status }) {
 
                     <div className="bg-white p-4 shadow dark:bg-gray-800 sm:rounded-lg sm:p-8">
                         <DeleteUserForm className="max-w-xl" />
+                    </div>
+
+                    <div className="bg-white p-4 shadow dark:bg-gray-800 sm:rounded-lg sm:p-8">
+                        <ExtraInfo className="max-w-xl" />
                     </div>
                 </div>
             </div>
