@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Auth\ProviderController;
+use App\Http\Controllers\ChatbotController;
 
 
 
@@ -42,8 +43,14 @@ Route::get('/settings', function () {
 
 });
 
-Route::get('/help', function () {
-    return Inertia::render('Help');
+
+
+Route::get('/help', action: [ChatbotController::class, 'index'])->name('help.index');
+
+
+
+Route::prefix('api')->group(function () {
+    Route::post('/chat', action: [ChatbotController::class, 'sendChat'])->name('api.sendChat');
 
 });
 
