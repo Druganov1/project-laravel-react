@@ -13,8 +13,11 @@ class ChatbotController extends Controller
 
 
     public function index(){
+
+        $userid = auth()->id();
+        $chats = Chatbot::where('user_id', $userid)->get();
         return Inertia::render('Help', [
-            'chats' => Chatbot::all()
+            'chats' => $chats
         ]);
 
     }
@@ -44,15 +47,15 @@ class ChatbotController extends Controller
             ]);
 
 
-         Chatbot::create([
+            $chatresponse = Chatbot::create([
                 'role' => 'bot',
                 'content' => $response['choices'][0]['message']['content'],
                 'user_id' => auth()->id()
             ]);
 
             return response()->json([
-                'groq_response' => $response['choices'][0]['message']['content'],
-
+                'role' => 'bot',
+                'content' => $response['choices'][0]['message']['content'],
             ], 200 );
         } catch (\Exception $e) {
             return response()->json([

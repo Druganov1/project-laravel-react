@@ -1,25 +1,39 @@
 import { usePage } from '@inertiajs/react';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function Help() {
     const { props } = usePage();
 
-    const [chats, setChats] = useState([props.chats]);
+    const [chats, setChats] = useState(props.chats || []);
+    const [message, setMessage] = useState('');
+    const chatContainerRef = useRef(null); // Create a ref for the chat container
 
-    console.log(chats);
+    useEffect(() => {
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop =
+                chatContainerRef.current.scrollHeight;
+        }
+    }, [chats]);
 
     const sendChatMessage = (e) => {
         e.preventDefault();
-        const message = e.target[0].value;
-        console.log(message);
+
+        let savedMessage = message;
+        setMessage('');
+
+        setChats((prevChats) => [
+            ...prevChats,
+            { content: message, role: 'user' },
+        ]);
 
         axios
             .post(route('api.sendChat'), {
-                message: message, // This should be in 'd-m-Y' format
+                message: message,
             })
             .then((response) => {
                 console.log(response.data); // Handle the response data
+                setChats((prevChats) => [...prevChats, response.data]);
             })
             .catch((error) => {
                 console.error('Error fetching timeslots:', error);
@@ -33,17 +47,22 @@ export default function Help() {
             </h1>
             <div className="container mx-auto">
                 <div className="mx-auto flex h-[700px] w-full max-w-3xl flex-col rounded-lg bg-white shadow-xl">
-                    <div className="flex-grow space-y-4 overflow-y-auto p-6">
-                        <div className="flex items-start">
-                            <div className="max-w-lg rounded-lg bg-gray-100 px-4 py-3 text-gray-900">
-                                Hello! How can I assist you today?
+                    <div
+                        className="flex-grow space-y-4 overflow-y-auto p-6"
+                        ref={chatContainerRef}
+                    >
+                        {chats.map((chat, index) => (
+                            <div
+                                key={index}
+                                className={`flex ${chat.role === 'bot' ? 'items-start' : 'items-end justify-end'}`}
+                            >
+                                <div
+                                    className={`max-w-lg px-4 py-3 ${chat.role === 'bot' ? 'bg-gray-100 text-gray-900' : 'bg-blue-600 text-white'} rounded-lg`}
+                                >
+                                    {chat.content}
+                                </div>
                             </div>
-                        </div>
-                        <div className="flex items-end justify-end">
-                            <div className="max-w-lg rounded-lg bg-blue-600 px-4 py-3 text-white">
-                                I need help with my project
-                            </div>
-                        </div>
+                        ))}
                     </div>
 
                     <div className="border-t border-gray-300 p-4">
@@ -53,6 +72,7 @@ export default function Help() {
                         >
                             <input
                                 type="text"
+                                value={message}
                                 max={500}
                                 onChange={(e) => {
                                     if (e.target.value.length > 500) {
@@ -60,6 +80,8 @@ export default function Help() {
                                             0,
                                             500,
                                         ); // Truncate any extra input
+                                    } else {
+                                        setMessage(e.target.value);
                                     }
                                 }}
                                 placeholder="Type your message..."
