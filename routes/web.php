@@ -7,7 +7,7 @@ use Inertia\Inertia;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Auth\ProviderController;
 use App\Http\Controllers\ChatbotController;
-
+use App\Http\Controllers\IssueController;
 
 
 Route::get('/', function () {
@@ -61,8 +61,19 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/delete_profile_picture', [ProfileController::class, 'removeProfilePic'])->name('profile.deletepic');
     Route::post('/upload_profilepicture', [ProfileController::class, 'upload'])->name('profile.uploadpic');
+    Route::post('/issues/update-assignee', [IssueController::class, 'updateAssignee'])->name('issues.update-assignee');
+
+    Route::middleware('role:developer')->group(function () {
+        Route::get('/developer/issues/', [IssueController::class, 'indexDeveloper'])->name('developer.issues.index');
+    });
+
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/admin/issues/', [IssueController::class, 'index'])->name('issues.index');
+    });
+
 
 });
 
+Route::patch('/issues/{issue}/status', [IssueController::class, 'updateStatus'])->name('issues.update.status');
 
 require __DIR__.'/auth.php';

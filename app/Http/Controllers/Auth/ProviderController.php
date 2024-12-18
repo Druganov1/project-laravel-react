@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 
 class ProviderController extends Controller
 {
@@ -37,6 +38,10 @@ class ProviderController extends Controller
                 'provider_refresh_token' => $socialUser->refreshToken
             ]
         );
+
+        if (!$user->hasRole('user')) {
+            $user->assignRole('user');
+        }
 
         $user->save();
         auth()->login($user);
