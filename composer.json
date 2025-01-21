@@ -10,8 +10,10 @@
         "intervention/image": "^3.9",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
+        "laravel/telescope": "^5.3",
         "laravel/tinker": "^2.9",
         "lucianotonet/groq-laravel": "^0.0.10",
+        "openai-php/laravel": "^0.10.2",
         "socialiteproviders/discord": "^4.2",
         "spatie/laravel-permission": "^6.10",
         "tightenco/ziggy": "^2.0"

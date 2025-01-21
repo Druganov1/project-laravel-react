@@ -14,6 +14,8 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'deepseek_api_key' => env('DEEPSEEK_API_KEY'),
+    'imgbb_api_key' => env('IMGBB_API_KEY'),
 
     /*
     |--------------------------------------------------------------------------

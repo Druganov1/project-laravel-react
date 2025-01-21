@@ -8,8 +8,8 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Auth\ProviderController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\IssueController;
-
-
+use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\ImageScannerController;
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -55,6 +55,17 @@ Route::prefix('api')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('/recipe', function () {
+        return Inertia::render('RecipeMaker');
+
+    });
+
+    Route::get('/image-scanner', function () {
+        return Inertia::render('ImageScanner');
+    });
+
+    Route::post('/image-scanner/scan', [ImageScannerController::class, 'scanImage'])->middleware(['auth'])->name('image-scanner.scan');
+    Route::post('/recipe/generate', [RecipeController::class, 'generateRecipe'])->middleware(['auth'])->name('recipe.generate');
     Route::patch('/theme', action: [ProfileController::class, 'updateTheme'])->name('profile.updateTheme');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', action: [ProfileController::class, 'update'])->name('profile.update');
