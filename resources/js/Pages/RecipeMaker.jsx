@@ -74,7 +74,13 @@ export default function RecipeMaker() {
     };
 
     return (
-        <AuthenticatedLayout>
+        <AuthenticatedLayout
+            header={
+                <h2 className="text-xl font-semibold leading-tight text-gray-800">
+                    KookboekAI
+                </h2>
+            }
+        >
             <div className="flex h-screen flex-col items-center justify-center">
                 <h1 className="text-2xl font-bold">KookboekAI</h1>
                 {step === 0 && (

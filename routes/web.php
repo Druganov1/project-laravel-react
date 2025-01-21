@@ -60,8 +60,12 @@ Route::middleware('auth')->group(function () {
 
     });
 
-    Route::get('/image-scanner', function () {
-        return Inertia::render('ImageScanner');
+    Route::get('/beatmaker', function () {
+        return Inertia::render('Beatmaker');
+    });
+
+    Route::get('/id-scanner', function () {
+        return Inertia::render('IDScanner');
     });
 
     Route::post('/image-scanner/scan', [ImageScannerController::class, 'scanImage'])->middleware(['auth'])->name('image-scanner.scan');
